@@ -1,0 +1,5 @@
+itstool (1.1.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #639788)
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sat, 03 Sep 2011 19:06:43 +0200
