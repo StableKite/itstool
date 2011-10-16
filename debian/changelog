@@ -1,4 +1,4 @@
-itstool (1.1.1-1) UNRELEASED; urgency=low
+itstool (1.1.1-1) unstable; urgency=low
 
   * New upstream release.
   * debian/copyright: refer to an exact revision of DEP-5 (the last one).
@@ -7,7 +7,7 @@ itstool (1.1.1-1) UNRELEASED; urgency=low
        to Uploaders.
      + update Vcs-* fields to point to the Team repository.
 
- -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sun, 16 Oct 2011 20:54:34 +0200
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sun, 16 Oct 2011 21:08:33 +0200
 
 itstool (1.1.0-1) unstable; urgency=low
 
