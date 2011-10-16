@@ -1,0 +1,14 @@
+itstool (1.1.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/copyright: refer to an exact revision of DEP-5 (the last one).
+  * debian/control: change the Maintainer field to Python Applications Team
+    and put myself to Uploaders.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sun, 16 Oct 2011 20:05:39 +0200
+
+itstool (1.1.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #639788)
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sat, 03 Sep 2011 19:06:43 +0200
