@@ -1,3 +1,11 @@
+itstool (1.1.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/manpage-minuses.patch: indicate that I have forwarded it
+    upstream.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Wed, 08 Feb 2012 19:33:58 +0100
+
 itstool (1.1.1-1) unstable; urgency=low
 
   * New upstream release.

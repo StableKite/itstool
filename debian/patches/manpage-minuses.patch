@@ -1,7 +1,8 @@
 Description: Replace two hyphens by minuses as intended.
 Forwarded: no
 Author: Tanguy Ortolo <tanguy+debian@ortolo.eu>
-Last-Update: 2011-09-03
+Forwared: yes
+Last-Update: 2011-10-23
 
 Index: itstool/itstool.1.in
 ===================================================================

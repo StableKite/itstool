@@ -1,3 +1,30 @@
+commit ed24c8ab3b22a085daea614638cbc15796011f15
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Tue Sep 27 10:16:55 2011 -0400
+
+    Better handling of XML errors in PO files
+    
+    Rather than let an exception kill itstool, just issue a warning
+    and use the original-language node. Added --strict to error out
+    for XML errors in PO files.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=41254
+
+ itstool.in                    |   38 ++++++++++++++++++++++++++++++--------
+ tests/Translate3.ll.wrong.xml |   12 ++++++++++++
+ tests/run_tests.py            |   23 +++++++++++++++++------
+ 3 files changed, 59 insertions(+), 14 deletions(-)
+
+commit e5c3be76682a1e1d224ad89fa3798cf3a7b81900
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Mon Sep 19 09:12:30 2011 -0400
+
+    Version 1.1.1
+
+ NEWS         |    7 +++++++
+ configure.ac |    2 +-
+ 2 files changed, 8 insertions(+), 1 deletions(-)
+
 commit 0520144626db679e81725aebfaba273a52fd0bf4
 Merge: 092a264 7e07396
 Author: Shaun McCance <shaunm@gnome.org>
