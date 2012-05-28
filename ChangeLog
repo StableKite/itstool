@@ -1,3 +1,49 @@
+commit 63e2b5739977a99a70898e6c78798b7eaa66293e
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Wed Apr 4 12:39:06 2012 -0400
+
+    Don't error out when invalid msgstr is non-ascii
+
+ itstool.in |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+commit 367d347cfc0d7bfcc25ab5b83c59e8824af4ae27
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Mon Apr 2 10:16:29 2012 -0400
+
+    Proper error message when source XML file can't be read
+
+ itstool.in |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+commit 3ff47350b0386c971e4fb1955f87fefc2c5aafd1
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Mon Apr 2 09:51:30 2012 -0400
+
+    Handle UTF-8 in attribute values
+
+ itstool.in |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+commit 1e0fa47194bbfcbd30e402a4897a0856a6045b73
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Fri Mar 23 10:09:55 2012 -0400
+
+    Don't output external ref messages under its:translate="no"
+
+ itstool.in |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+commit 80b34e2870abd08cb96f2929d8ee32acab3d89e9
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sun Feb 5 11:53:41 2012 -0500
+
+    Version 1.1.2
+
+ NEWS         |    4 ++++
+ configure.ac |    2 +-
+ 2 files changed, 5 insertions(+), 1 deletions(-)
+
 commit ed24c8ab3b22a085daea614638cbc15796011f15
 Author: Shaun McCance <shaunm@gnome.org>
 Date:   Tue Sep 27 10:16:55 2011 -0400
