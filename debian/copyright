@@ -1,7 +1,9 @@
-Format: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=174&view=co
+Format:  http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: ITS Tool
 Upstream-Contact: Shaun McCance <shaunm@gnome.org>
 Source: <http://itstool.org/download/>
+License: GPL-3.0+
+Copyright: 2010-2011 Shaun McCance <shaunm@gnome.org>
 
 Files: *
 Copyright: 2010-2011 Shaun McCance <shaunm@gnome.org>
@@ -18,7 +20,6 @@ License: Any
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
 
 Files: debian/*
 Copyright: 2011 Tanguy Ortolo <tanguy+debian@ortolo.eu>

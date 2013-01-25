@@ -1,3 +1,11 @@
+itstool (1.2.0-1) experimental; urgency=low
+
+  * New upstream release.
+  * debian/control: update Standard-Version, changes needed:
+     + debian/copyright: update for official format 1.0.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 25 Jan 2013 20:20:28 +0100
+
 itstool (1.1.3-1) unstable; urgency=low
 
   * New upstream release

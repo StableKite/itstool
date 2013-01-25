@@ -1,3 +1,220 @@
+commit 6fce21cd7b4417d8ea8cff3a8f2c79063d5353a3
+Merge: f951a0f 470b52a
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sun Jun 24 10:26:00 2012 -0400
+
+    Merge branch '1.1'
+
+commit f951a0f451451acaa3ffdd8d1e8e598615ab2d21
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat Jun 23 11:17:25 2012 -0400
+
+    Always use nsProp(), not prop()
+
+ itstool.in |   94 ++++++++++++++++++++++++++++++------------------------------
+ 1 files changed, 47 insertions(+), 47 deletions(-)
+
+commit 5c47aea87ecd67b69cc7596a61db0ff950e71063
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Wed May 16 11:12:19 2012 -0400
+
+    Be much more strict (and correct) about the version attribute
+
+ its/docbook.its |    2 +-
+ its/its.its     |    2 +-
+ its/mallard.its |    2 +-
+ its/ttml.its    |    2 +-
+ its/xhtml.its   |    2 +-
+ itstool.in      |   38 ++++++++++++++++++++++++++++++++++++--
+ 6 files changed, 41 insertions(+), 7 deletions(-)
+
+commit f53cb2b28fafaf6488f283020bc4de6c86f75c0a
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat May 12 12:21:02 2012 -0400
+
+    Show language code when failing to get translation from PO
+    
+    Otherwise you have no idea which translation is causing problems
+    when using join mode.
+
+ itstool.in |   13 +++++++------
+ 1 files changed, 7 insertions(+), 6 deletions(-)
+
+commit a3b94bef85d9a96aec2656987d0910cc928573dc
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Fri May 11 15:13:46 2012 -0400
+
+    Try to maintain indentation in join mode
+
+ itstool.in             |    7 +++++++
+ tests/IT-join-1.ll.xml |   30 ++++++++++++++++++++++++------
+ 2 files changed, 31 insertions(+), 6 deletions(-)
+
+commit 4690db4df453dd79cc8df1bdf0ba49475fb6c83c
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Fri May 11 13:06:22 2012 -0400
+
+    tests: Adding regression test for join mode
+
+ tests/IT-join-1.cs.po  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/IT-join-1.de.po  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/IT-join-1.fr.po  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/IT-join-1.ll.xml |   18 ++++++++++++++++++
+ tests/IT-join-1.pot    |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/IT-join-1.xml    |   19 +++++++++++++++++++
+ tests/run_tests.py     |   27 +++++++++++++++++++++++++++
+ 7 files changed, 248 insertions(+), 0 deletions(-)
+
+commit 124f58219a33677f010f4e56fe09d0fb389d2b52
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Tue May 8 12:55:29 2012 -0400
+
+    Adding new join mode for multi-lingual XML files
+
+ itstool.in |  106 +++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 91 insertions(+), 15 deletions(-)
+
+commit 470b52ad6d4f55b32a56d95671d608c483dbeae7
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Mon May 7 16:40:21 2012 -0400
+
+    Version 1.1.3
+
+ NEWS         |    6 ++++++
+ configure.ac |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletions(-)
+
+commit 7daf5389b1b6f2d82e86d2a9aa8289f4c1aa5d12
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sun May 6 20:10:03 2012 -0400
+
+    tests: Added two more tests
+    
+    Already had these XML files from W3C, but I didn't have POT files
+    to test them against
+
+ tests/EX-locNote-element-1.pot      |   18 ++++++++++++++++++
+ tests/EX-locNoteRef-attribute-1.pot |   17 +++++++++++++++++
+ tests/run_tests.py                  |    6 ++++++
+ 3 files changed, 41 insertions(+), 0 deletions(-)
+
+commit 2548f4006f064caf2d6ecd0402f723f650b135d6
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sun May 6 20:05:53 2012 -0400
+
+    tests: msgmerge po files to have new syntax from pot files
+
+ tests/IT-attributes-1.ll.po  |   10 ++++---
+ tests/IT-context-1.ll.po     |   19 ++++++++-----
+ tests/IT-dropRule-1.ll.po    |    7 +++--
+ tests/IT-placeholder-1.ll.po |   17 ++++++++----
+ tests/Translate1.ll.po       |   28 +++++++++++++-------
+ tests/Translate2.ll.po       |   10 ++++---
+ tests/Translate3.ll.po       |   18 ++++++++----
+ tests/Translate3.ll.wrong.po |   18 ++++++++----
+ tests/Translate4.ll.po       |   18 ++++++++----
+ tests/Translate5.ll.po       |   18 ++++++++----
+ tests/Translate6.ll.po       |   27 +++++++++++++------
+ tests/Translate7.ll.po       |   10 ++++---
+ tests/TranslateGlobal.ll.po  |   13 ++++++---
+ tests/WithinText1.ll.po      |   22 ++++++++++------
+ tests/WithinText2.ll.po      |   58 +++++++++++++++++++++++++++++-------------
+ 15 files changed, 191 insertions(+), 102 deletions(-)
+
+commit 2c153716eaf5650077741a46ae4bc91365c08e02
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sun May 6 13:24:50 2012 -0400
+
+    Renamed itstool-specific tests to use IT- prefix
+
+ tests/Attributes1.ll.po       |   19 -------------------
+ tests/Attributes1.ll.xml      |   10 ----------
+ tests/Attributes1.pot         |   21 ---------------------
+ tests/Attributes1.xml         |   10 ----------
+ tests/Context.ll.po           |   35 -----------------------------------
+ tests/Context.ll.xml          |   15 ---------------
+ tests/Context.pot             |   40 ----------------------------------------
+ tests/Context.xml             |   14 --------------
+ tests/Droprule.ll.po          |   15 ---------------
+ tests/Droprule.ll.xml         |   11 -----------
+ tests/Droprule.pot            |   16 ----------------
+ tests/Droprule.xml            |   12 ------------
+ tests/IT-attributes-1.ll.po   |   19 +++++++++++++++++++
+ tests/IT-attributes-1.ll.xml  |   10 ++++++++++
+ tests/IT-attributes-1.pot     |   21 +++++++++++++++++++++
+ tests/IT-attributes-1.xml     |   10 ++++++++++
+ tests/IT-context-1.ll.po      |   35 +++++++++++++++++++++++++++++++++++
+ tests/IT-context-1.ll.xml     |   15 +++++++++++++++
+ tests/IT-context-1.pot        |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/IT-context-1.xml        |   14 ++++++++++++++
+ tests/IT-dropRule-1.ll.po     |   15 +++++++++++++++
+ tests/IT-dropRule-1.ll.xml    |   11 +++++++++++
+ tests/IT-dropRule-1.pot       |   16 ++++++++++++++++
+ tests/IT-dropRule-1.xml       |   12 ++++++++++++
+ tests/IT-malformed.xml        |    6 ++++++
+ tests/IT-placeholder-1.ll.po  |   19 +++++++++++++++++++
+ tests/IT-placeholder-1.ll.xml |    6 ++++++
+ tests/IT-placeholder-1.pot    |   21 +++++++++++++++++++++
+ tests/IT-placeholder-1.xml    |    5 +++++
+ tests/Malformed.xml           |    6 ------
+ tests/Placeholder.ll.po       |   19 -------------------
+ tests/Placeholder.ll.xml      |    6 ------
+ tests/Placeholder.pot         |   21 ---------------------
+ tests/Placeholder.xml         |    5 -----
+ tests/run_tests.py            |   20 ++++++++++----------
+ 35 files changed, 285 insertions(+), 285 deletions(-)
+
+commit d67907f3269ab5bbebae9267ec43df023591c520
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat May 5 21:49:54 2012 -0400
+
+    tests: Changed test names to match file names
+
+ tests/run_tests.py |   52 ++++++++++++++++++++++++++--------------------------
+ 1 files changed, 26 insertions(+), 26 deletions(-)
+
+commit 9c5e6b9d2d90c9f5fc4693acd727f45d4512e687
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat May 5 20:07:00 2012 -0400
+
+    Better handling of comments, new XML path markers
+    
+    Comments were getting lost if they weren't specified at exactly
+    the same level as translation units were taken from. This commit
+    changes how comments are handled to prevent that.
+    
+    I also moved path markers from the file context comment, because
+    it's wrong and messes up some tools.
+
+ itstool.in                                 |  167 ++++++++++++++++++++--------
+ tests/Attributes1.pot                      |    8 +-
+ tests/Context.pot                          |   17 ++-
+ tests/Droprule.pot                         |    5 +-
+ tests/EX-locNote-selector-2.pot            |   37 ++++++
+ tests/EX-locNotePointer-attribute-1.pot    |    8 +-
+ tests/EX-locNoteRefPointer-attribute-1.pot |   12 +-
+ tests/IT-locNote-inline.pot                |   20 ++++
+ tests/IT-locNote-inline.xml                |   15 +++
+ tests/IT-locNote-multiples.pot             |   28 +++++
+ tests/IT-locNote-multiples.xml             |   19 +++
+ tests/LocNote1.pot                         |   11 +-
+ tests/LocNote2.pot                         |   11 +-
+ tests/LocNote3.pot                         |   18 ++-
+ tests/LocNote4.pot                         |   19 ++-
+ tests/Placeholder.pot                      |   21 ++++
+ tests/Translate1.pot                       |   23 +++--
+ tests/Translate2.pot                       |    8 +-
+ tests/Translate3.pot                       |   21 ++++
+ tests/Translate4.pot                       |   21 ++++
+ tests/Translate5.pot                       |    8 +-
+ tests/Translate6.pot                       |   36 ++++++
+ tests/Translate7.pot                       |    8 +-
+ tests/TranslateGlobal.pot                  |   11 +-
+ tests/WithinText1.pot                      |   11 +-
+ tests/WithinText2.pot                      |   32 ++++--
+ tests/run_tests.py                         |    9 ++-
+ 27 files changed, 481 insertions(+), 123 deletions(-)
+
 commit 63e2b5739977a99a70898e6c78798b7eaa66293e
 Author: Shaun McCance <shaunm@gnome.org>
 Date:   Wed Apr 4 12:39:06 2012 -0400
