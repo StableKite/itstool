@@ -1,3 +1,9 @@
+itstool (1.2.0-2) UNRELEASED; urgency=low
+
+  * Use canonical URIs for Vcs-* fields.
+
+ -- Jakub Wilk <jwilk@debian.org>  Sun, 05 May 2013 18:05:14 +0200
+
 itstool (1.2.0-1) experimental; urgency=low
 
   * New upstream release.
