@@ -1,8 +1,18 @@
-itstool (1.2.0-2) UNRELEASED; urgency=low
+itstool (1.2.0-3) unstable; urgency=low
 
+  [ Tanguy Ortolo ]
+  * Merge modifications from Jakub Wilk.
+
+  [ Jakub Wilk ]
   * Use canonical URIs for Vcs-* fields.
 
- -- Jakub Wilk <jwilk@debian.org>  Sun, 05 May 2013 18:05:14 +0200
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 30 May 2013 08:10:44 +0200
+
+itstool (1.2.0-2) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Wed, 29 May 2013 19:35:07 +0200
 
 itstool (1.2.0-1) experimental; urgency=low
 
