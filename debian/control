@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Python Applications Packaging Team <python-apps-team@lists.alioth.debian.org>
 Uploaders: Tanguy Ortolo <tanguy+debian@ortolo.eu>
 Build-Depends: debhelper (>= 8)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://itstool.org/
 Vcs-Svn: svn://anonscm.debian.org/python-apps/packages/itstool/trunk/
 Vcs-Browser: http://anonscm.debian.org/viewvc/python-apps/packages/itstool/trunk/
