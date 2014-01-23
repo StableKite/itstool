@@ -1,3 +1,10 @@
+itstool (2.0.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control: update Standards-Version to 3.9.5 (no change needed).
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 23 Jan 2014 23:19:19 +0100
+
 itstool (1.2.0-3) unstable; urgency=low
 
   [ Tanguy Ortolo ]
