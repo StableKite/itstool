@@ -1,6 +1,7 @@
 itstool (2.0.2-2) UNRELEASED; urgency=medium
 
   * Build-depends on python, python-libxml2. Closes: #737953
+  * Bump debhelper to 9
 
  -- Jackson Doak <noskcaj@ubuntu.com>  Sun, 23 Feb 2014 08:51:58 +1100
 
