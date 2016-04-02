@@ -1,3 +1,13 @@
+itstool (2.0.2-3) unstable; urgency=medium
+
+  * debian/patches/fix-utf8-handling.patch: Backport an upstream fix to
+    prevent itstool from failing on non-ASCII characters. (Closes: #810989)
+  * debian/control:
+     - Switch Vcs-Browser URL to HTTPS.
+     - Update Standards-Version to 3.9.7 (no change needed).
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Sat, 02 Apr 2016 19:10:04 +0200
+
 itstool (2.0.2-2) unstable; urgency=medium
 
   * Team upload.
