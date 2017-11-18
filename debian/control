@@ -1,6 +1,6 @@
 Source: itstool
 Section: text
-Priority: extra
+Priority: optional
 Maintainer: Python Applications Packaging Team <python-apps-team@lists.alioth.debian.org>
 Uploaders: Tanguy Ortolo <tanguy+debian@ortolo.eu>
 Build-Depends: debhelper (>= 9), python (>= 2.6.6-3~), python-libxml2
@@ -11,6 +11,7 @@ Vcs-Browser: https://anonscm.debian.org/viewvc/python-apps/packages/itstool/trun
 
 Package: itstool
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}, python, python-libxml2
 Description: tool for translating XML documents with PO files
  ITS Tool allows you to translate your XML documents with PO files, using rules
