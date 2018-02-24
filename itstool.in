@@ -72,7 +72,7 @@ class MessageList (object):
         msg = Message()
         msg.set_context('_')
         msg.add_text('translator-credits')
-        msg.add_comment('Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2')
+        msg.add_comment(Comment('Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2'))
         self._messages.append(msg)
         self._has_credits = True
 
@@ -90,6 +90,8 @@ class MessageList (object):
             if msgdict.has_key(key):
                 for source in msg.get_sources():
                     msgdict[key].add_source(source)
+                for marker in msg.get_markers():
+                    msgdict[key].add_marker(marker)
                 for comment in msg.get_comments():
                     msgdict[key].add_comment(comment)
                 if msg.get_preserve_space():
@@ -113,6 +115,50 @@ class MessageList (object):
             out.write('\n')
 
 
+class Comment (object):
+    def __init__ (self, text):
+        self._text = text
+        assert(text is not None)
+        self._markers = []
+
+    def add_marker (self, marker):
+        self._markers.append(marker)
+
+    def get_markers (self):
+        return self._markers
+
+    def get_text (self):
+        return self._text
+
+    def format (self):
+        ret = u''
+        markers = {}
+        for marker in self._markers:
+            if not markers.has_key(marker):
+                ret += '#. (itstool) comment: ' + marker + '\n'
+                markers[marker] = marker
+        if '\n' in self._text:
+            doadd = False
+            for line in self._text.split('\n'):
+                if line != '':
+                    doadd = True
+                if not doadd:
+                    continue
+                ret += u'#. %s\n' % line
+        else:
+            text = self._text
+            while len(text) > 72:
+                j = text.rfind(' ', 0, 72)
+                if j == -1:
+                    j = text.find(' ')
+                if j == -1:
+                    break
+                ret += u'#. %s\n' % text[:j]
+                text = text[j+1:]
+            ret += '#. %s\n' % text
+        return ret
+
+
 class Message (object):
     def __init__ (self):
         self._message = []
@@ -120,6 +166,7 @@ class Message (object):
         self._ctxt = None
         self._placeholders = []
         self._sources = []
+        self._markers = []
         self._comments = []
         self._preserve = False
 
@@ -201,6 +248,14 @@ class Message (object):
     def get_sources (self):
         return self._sources
 
+    def add_marker (self, marker):
+        if not isinstance(marker, unicode):
+            marker = unicode(marker, 'utf-8')
+        self._markers.append(marker)
+
+    def get_markers (self):
+        return self._markers
+
     def add_comment (self, comment):
         if comment is not None:
             self._comments.append(comment)
@@ -229,28 +284,25 @@ class Message (object):
 
     def format (self):
         ret = u''
-        for i in range(len(self._comments)):
+        markers = {}
+        for marker in self._markers:
+            if not markers.has_key(marker):
+                ret += '#. (itstool) path: ' + marker + '\n'
+                markers[marker] = marker
+        comments = []
+        commentsdict = {}
+        for comment in self._comments:
+            key = comment.get_text()
+            if commentsdict.has_key(key):
+                for marker in comment.get_markers():
+                    commentsdict[key].add_marker(marker)
+            else:
+                comments.append(comment)
+                commentsdict[key] = comment
+        for i in range(len(comments)):
             if i != 0:
                 ret += '#.\n'
-            comment = self._comments[i]
-            if '\n' in comment:
-                doadd = False
-                for line in comment.split('\n'):
-                    if line != '':
-                        doadd = True
-                    if not doadd:
-                        continue
-                    ret += u'#. %s\n' % line
-            else:
-                while len(comment) > 72:
-                    j = comment.rfind(' ', 0, 72)
-                    if j == -1:
-                        j = comment.find(' ')
-                    if j == -1:
-                        break
-                    ret += u'#. %s\n' % comment[:j]
-                    comment = comment[j+1:]
-                ret += '#. %s\n' % comment
+            ret += comments[i].format()
         for source in self._sources:
             ret += u'#: %s\n' % source
         if self._preserve:
@@ -292,6 +344,20 @@ def xml_is_ns_name (node, ns, name):
 def xml_error_catcher(doc, error):
     doc._xml_err += " %s" % error
 
+def fix_node_ns (node, nsdefs):
+    childnsdefs = nsdefs.copy()
+    nsdef = node.nsDefs()
+    while nsdef is not None:
+        nextnsdef = nsdef.next
+        if nsdefs.has_key(nsdef.name) and nsdefs[nsdef.name] == nsdef.content:
+            node.removeNsDef(nsdef.content)
+        else:
+            childnsdefs[nsdef.name] = nsdef.content
+        nsdef = nextnsdef
+    for child in xml_child_iter(node):
+        if child.type == 'element':
+            fix_node_ns(child, childnsdefs)
+
 
 class Document (object):
     def __init__ (self, filename, messages):
@@ -311,7 +377,7 @@ class Document (object):
         def pre_process (node):
             for child in xml_child_iter(node):
                 if xml_is_ns_name(child, 'http://www.w3.org/2001/XInclude', 'include'):
-                    if child.prop('parse') == 'text':
+                    if child.nsProp('parse', None) == 'text':
                         child.xincludeProcessTree()
                 elif xml_is_ns_name(child, NS_ITS, 'rules'):
                     if child.hasNsProp('href', NS_XLINK):
@@ -320,8 +386,32 @@ class Document (object):
                         hctxt = libxml2.createFileParserCtxt(href)
                         hctxt.replaceEntities(1)
                         hctxt.parseDocument()
-                        self._localrules.append(hctxt.doc().getRootElement())
-                    self._localrules.append(child)
+                        root = hctxt.doc().getRootElement()
+                        version = None
+                        if root.hasNsProp('version', None):
+                            version = root.nsProp('version', None)
+                        else:
+                            sys.stderr.write('Warning: ITS file %s missing version attribute\n' %
+                                             os.path.basename(href))
+                        if version is not None and version != '1.0':
+                            sys.stderr.write('Warning: Skipping ITS file %s with unknown version %s\n' %
+                                             (os.path.basename(href), root.nsProp('version', None)))
+                        else:
+                            self._localrules.append(root)
+                    version = None
+                    if child.hasNsProp('version', None):
+                        version = child.nsProp('version', None)
+                    else:
+                        root = child.doc.getRootElement()
+                        if root.hasNsProp('version', NS_ITS):
+                            version = root.nsProp('version', NS_ITS)
+                        else:
+                            sys.stderr.write('Warning: Local ITS rules missing version attribute\n')
+                    if version is not None and version != '1.0':
+                        sys.stderr.write('Warning: Skipping local ITS rules with unknown version %s\n' %
+                                         version)
+                    else:
+                        self._localrules.append(child)
                 pre_process(child)
         pre_process(self._doc)
         try:
@@ -349,33 +439,33 @@ class Document (object):
         if rule.type != 'element':
             return
         if xml_is_ns_name(rule, NS_ITS, 'translateRule'):
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
-                    self._its_translate_nodes[node] = rule.prop('translate')
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
+                    self._its_translate_nodes[node] = rule.nsProp('translate', None)
         elif xml_is_ns_name(rule, NS_ITS, 'withinTextRule'):
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
-                    self._its_within_text_nodes[node] = rule.prop('withinText')
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
+                    self._its_within_text_nodes[node] = rule.nsProp('withinText', None)
         elif xml_is_ns_name(rule, NS_ITST, 'preserveSpaceRule'):
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
-                    self._itst_preserve_space_nodes[node] = rule.prop('preserveSpace')
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
+                    self._itst_preserve_space_nodes[node] = rule.nsProp('preserveSpace', None)
         elif xml_is_ns_name(rule, NS_ITST, 'dropRule'):
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
-                    self._itst_drop_nodes[node] = rule.prop('drop')
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
+                    self._itst_drop_nodes[node] = rule.nsProp('drop', None)
         elif xml_is_ns_name(rule, NS_ITST, 'contextRule'):
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
-                    if rule.hasProp('context'):
-                        self._itst_contexts[node] = rule.prop('context')
-                    elif rule.hasProp('contextPointer'):
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
+                    if rule.hasNsProp('context', None):
+                        self._itst_contexts[node] = rule.nsProp('context', None)
+                    elif rule.hasNsProp('contextPointer', None):
                         try:
                             oldnode = xpath.contextNode()
                         except:
                             oldnode = None
                         xpath.setContextNode(node)
-                        ctxt = self._try_xpath_eval(xpath, rule.prop('contextPointer'))
+                        ctxt = self._try_xpath_eval(xpath, rule.nsProp('contextPointer', None))
                         if isinstance(ctxt, basestring):
                             self._itst_contexts[node] = ctxt
                         else:
@@ -390,18 +480,18 @@ class Document (object):
                     locnote = re.sub('\s+', ' ', child.content).strip()
                     break
             if locnote is None:
-                if rule.hasProp('locNoteRef'):
-                    locnote = 'SEE: ' + re.sub('\s+', ' ', rule.prop('locNoteRef')).strip()
-            if rule.prop('selector') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
+                if rule.hasNsProp('locNoteRef', None):
+                    locnote = '(itstool) link: ' + re.sub('\s+', ' ', rule.nsProp('locNoteRef', None)).strip()
+            if rule.nsProp('selector', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
                     if locnote is not None:
-                        self._its_loc_notes[node] = locnote
+                        self._its_loc_notes.setdefault(node, []).append(locnote)
                     else:
-                        if rule.hasProp('locNotePointer'):
-                            sel = rule.prop('locNotePointer')
+                        if rule.hasNsProp('locNotePointer', None):
+                            sel = rule.nsProp('locNotePointer', None)
                             ref = False
-                        elif rule.hasProp('locNoteRefPointer'):
-                            sel = rule.prop('locNoteRefPointer')
+                        elif rule.hasNsProp('locNoteRefPointer', None):
+                            sel = rule.nsProp('locNoteRefPointer', None)
                             ref = True
                         else:
                             continue
@@ -412,7 +502,7 @@ class Document (object):
                         xpath.setContextNode(node)
                         note = self._try_xpath_eval(xpath, sel)
                         if isinstance(note, basestring):
-                            self._its_loc_notes[node] = note
+                            self._its_loc_notes.setdefault(node, []).append(note)
                         else:
                             for note in note:
                                 if self.get_preserve_space(note):
@@ -420,42 +510,42 @@ class Document (object):
                                 else:
                                     cont = re.sub('\s+', ' ', note.content).strip()
                                 if ref:
-                                    cont = 'SEE: ' + cont
-                                self._its_loc_notes[node] = cont
+                                    cont = '(itstool) link: ' + cont
+                                self._its_loc_notes.setdefault(node, []).append(cont)
                                 break
                         xpath.setContextNode(oldnode)
         elif xml_is_ns_name(rule, NS_ITS, 'langRule'):
-            if rule.prop('selector') is not None and rule.prop('langPointer') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
+            if rule.nsProp('selector', None) is not None and rule.nsProp('langPointer', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
                     try:
                         oldnode = xpath.contextNode()
                     except:
                         oldnode = None
                     xpath.setContextNode(node)
-                    res = self._try_xpath_eval(xpath, rule.prop('langPointer'))
+                    res = self._try_xpath_eval(xpath, rule.nsProp('langPointer', None))
                     if len(res) > 0:
                         self._its_lang[node] = res[0].content
                     # We need to construct language attributes, not just read
                     # language information. Technically, langPointer could be
                     # any XPath expression. But if it looks like an attribute
                     # accessor, just use the attribute name.
-                    if rule.prop('langPointer')[0] == '@':
-                        self._itst_lang_attr[node] = rule.prop('langPointer')[1:]
+                    if rule.nsProp('langPointer', None)[0] == '@':
+                        self._itst_lang_attr[node] = rule.nsProp('langPointer', None)[1:]
                     xpath.setContextNode(oldnode)
         elif xml_is_ns_name(rule, NS_ITST, 'credits'):
-            if rule.prop('appendTo') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('appendTo')):
+            if rule.nsProp('appendTo', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('appendTo', None)):
                     self._itst_credits = (node, rule)
                     break
         elif xml_is_ns_name(rule, NS_ITST, 'externalRefRule'):
-            if rule.prop('selector') is not None and rule.prop('refPointer') is not None:
-                for node in self._try_xpath_eval(xpath, rule.prop('selector')):
+            if rule.nsProp('selector', None) is not None and rule.nsProp('refPointer', None) is not None:
+                for node in self._try_xpath_eval(xpath, rule.nsProp('selector', None)):
                     try:
                         oldnode = xpath.contextNode()
                     except:
                         oldnode = None
                     xpath.setContextNode(node)
-                    res = self._try_xpath_eval(xpath, rule.prop('refPointer'))
+                    res = self._try_xpath_eval(xpath, rule.nsProp('refPointer', None))
                     if len(res) > 0:
                         self._itst_externals.append((node, res[0].content))
                     xpath.setContextNode(oldnode)
@@ -489,6 +579,16 @@ class Document (object):
         root = doc.getRootElement()
         if not xml_is_ns_name(root, NS_ITS, 'rules'):
             return
+        version = None
+        if root.hasNsProp('version', None):
+            version = root.nsProp('version', None)
+        else:
+            sys.stderr.write('Warning: ITS file %s missing version attribute\n' %
+                             os.path.basename(filename))
+        if version is not None and version != '1.0':
+            sys.stderr.write('Warning: Skipping ITS file %s with unknown version %s\n' %
+                             (os.path.basename(filename), root.nsProp('version', None)))
+            return
         matched = True
         for match in xml_child_iter(root):
             if xml_is_ns_name(match, NS_ITST, 'match'):
@@ -505,8 +605,8 @@ class Document (object):
                                 xpath.xpathRegisterNs(nsdef.name, nsdef.content)
                         nsdef = nsdef.next
                     par = par.parent
-                if match.hasProp('selector'):
-                    if len(self._try_xpath_eval(xpath, match.prop('selector'))) > 0:
+                if match.hasNsProp('selector', None):
+                    if len(self._try_xpath_eval(xpath, match.nsProp('selector', None))) > 0:
                         matched = True
                         break
         if matched == False:
@@ -550,13 +650,13 @@ class Document (object):
 
     def _append_credits(self, parent, node, trdata):
         if xml_is_ns_name(node, NS_ITST, 'for-each'):
-            select = node.prop('select')
+            select = node.nsProp('select', None)
             if select == 'years':
                 for year in trdata[2].split(','):
                     for child in xml_child_iter(node):
                         self._append_credits(parent, child, trdata + (year.strip(),))
         elif xml_is_ns_name(node, NS_ITST, 'value-of'):
-            select = node.prop('select')
+            select = node.nsProp('select', None)
             val = None
             if select == 'name':
                 val = trdata[0]
@@ -593,6 +693,49 @@ class Document (object):
             for node in xml_child_iter(self._itst_credits[1]):
                 self._append_credits(self._itst_credits[0], node, trdata)
 
+    def join_translations(self, translations, node=None, strict=False):
+        is_root = False
+        if node is None:
+            is_root = True
+            self.generate_messages(comments=False)
+            node = self._doc.getRootElement()
+        if node is None or node.type != 'element':
+            return
+        if ((node.hasNsProp('drop', NS_ITST) and node.nsProp('drop', NS_ITST) == 'yes') or
+            self._itst_drop_nodes.get(node, 'no') == 'yes'):
+            prev = node.prev
+            node.unlinkNode()
+            node.freeNode()
+            if prev.isBlankNode():
+                prev.unlinkNode()
+                prev.freeNode()
+            return
+        msg = self._msgs.get_message_by_node(node)
+        if msg is None:
+            self.translate_attrs(node, node)
+            children = [child for child in xml_child_iter(node)]
+            for child in children:
+                self.join_translations(translations, node=child, strict=strict)
+        else:
+            prevnode = None
+            if node.prev is not None and node.prev.type == 'text':
+                prevtext = node.prev.content
+                if re.sub('\s+', '', prevtext) == '':
+                    prevnode = node.prev
+            for lang in sorted(translations.keys(), reverse=True):
+                newnode = self.get_translated(node, translations[lang], strict=strict, lang=lang)
+                if newnode != node:
+                    newnode.setProp('xml:lang', lang)
+                    node.addNextSibling(newnode)
+                    if prevnode is not None:
+                        node.addNextSibling(prevnode.copyNode(0))
+        if is_root:
+            # Because of the way we create nodes and rewrite the document,
+            # we end up with lots of redundant namespace definitions. We
+            # kill them off in one fell swoop at the end.
+            fix_node_ns(node, {})
+            self._check_errors()
+
     def merge_translations(self, translations, language, node=None, strict=False):
         is_root = False
         if node is None:
@@ -619,7 +762,7 @@ class Document (object):
             for child in children:
                 self.merge_translations(translations, language, node=child, strict=strict)
         else:
-            newnode = self.get_translated(node, translations, strict=strict)
+            newnode = self.get_translated(node, translations, strict=strict, lang=language)
             if newnode != node:
                 self.translate_attrs(node, newnode)
                 node.replaceNode(newnode)
@@ -650,19 +793,6 @@ class Document (object):
             # Because of the way we create nodes and rewrite the document,
             # we end up with lots of redundant namespace definitions. We
             # kill them off in one fell swoop at the end.
-            def fix_node_ns (node, nsdefs):
-                childnsdefs = nsdefs.copy()
-                nsdef = node.nsDefs()
-                while nsdef is not None:
-                    nextnsdef = nsdef.next
-                    if nsdefs.has_key(nsdef.name) and nsdefs[nsdef.name] == nsdef.content:
-                        node.removeNsDef(nsdef.content)
-                    else:
-                        childnsdefs[nsdef.name] = nsdef.content
-                    nsdef = nextnsdef
-                for child in xml_child_iter(node):
-                    if child.type == 'element':
-                        fix_node_ns(child, childnsdefs)
             fix_node_ns(node, {})
             self._check_errors()
 
@@ -673,7 +803,7 @@ class Document (object):
             if newcontent:
                 newnode.setProp(attr.name, translations.ugettext(attr.get_content()))
 
-    def get_translated (self, node, translations, strict=False):
+    def get_translated (self, node, translations, strict=False, lang=None):
         msg = self._msgs.get_message_by_node(node)
         if msg is None:
             return node
@@ -713,8 +843,9 @@ class Document (object):
             if strict:
                 raise
             else:
-                sys.stderr.write('Warning: Could not merge translation for msgid:\n%s\n' %
-                                 msgstr.encode('utf-8'))
+                sys.stderr.write('Warning: Could not merge %stranslation for msgid:\n%s\n' % (
+                        (lang + ' ') if lang is not None else '',
+                        msgstr.encode('utf-8')))
                 self._xml_err = ''
                 return node
         def scan_node(node):
@@ -728,7 +859,7 @@ class Document (object):
                         self.merge_translations(translations, None, ph_node, strict=strict)
                         child.replaceNode(ph_node)
                     else:
-                        repl = self.get_translated(ph_node, translations, strict=strict)
+                        repl = self.get_translated(ph_node, translations, strict=strict, lang=lang)
                         child.replaceNode(repl)
                 scan_node(child)
         scan_node(trnode)
@@ -761,12 +892,13 @@ class Document (object):
             txt = "external ref='%s' md5='%s'" % (ext[1], filemd5)
             msg.set_context('_')
             msg.add_text(txt)
-            msg.add_source('%s:%i(%s)' % (self._doc.name, ext[0].lineNo(), ext[0].name))
-            msg.add_comment('This is a reference to an external file such as an image or'
-                            ' video. When the file changes, the md5 hash will change to'
-                            ' let you know you need to update your localized copy. The'
-                            ' msgstr is not used at all. Set it to whatever you like'
-                            ' once you have updated your copy of the file.')
+            msg.add_source('%s:%i' % (self._doc.name, ext[0].lineNo()))
+            msg.add_marker(ext[0].name)
+            msg.add_comment(Comment('This is a reference to an external file such as an image or'
+                                    ' video. When the file changes, the md5 hash will change to'
+                                    ' let you know you need to update your localized copy. The'
+                                    ' msgstr is not used at all. Set it to whatever you like'
+                                    ' once you have updated your copy of the file.'))
             self._msgs.add_message(msg, None)
         self._in_translatable = True
         for child in xml_child_iter(self._doc):
@@ -774,7 +906,7 @@ class Document (object):
                 self.generate_message(child, None, comments=comments)
                 break
 
-    def generate_message (self, node, msg, comments=True):
+    def generate_message (self, node, msg, comments=True, path=None):
         if node.type in ('text', 'cdata') and msg is not None:
             msg.add_text(node.content)
             return
@@ -784,6 +916,8 @@ class Document (object):
             return
         if self._itst_drop_nodes.get(node, 'no') == 'yes':
             return
+        if path is None:
+            path = ''
         translate = self.get_its_translate(node)
         if translate is None:
             if self._in_translatable:
@@ -811,7 +945,8 @@ class Document (object):
                     msg.set_context(ctxt)
                 if self.get_preserve_space(node):
                     msg.set_preserve_space()
-                msg.add_source('%s:%i(%s/%s)' % (self._doc.name, node.lineNo(), node.parent.name, node.name))
+                msg.add_source('%s:%i' % (self._doc.name, node.lineNo()))
+                msg.add_marker('%s/%s' % (node.parent.name, node.name))
             else:
                 withinText = True
                 msg.add_start_tag(node)
@@ -821,21 +956,37 @@ class Document (object):
             for attr in xml_attr_iter(node):
                 if self._its_translate_nodes.get(attr, 'no') == 'yes':
                     attr_msg = Message()
-                    attr_msg.add_source('%s:%i(%s/%s@%s)' % (
-                        self._doc.name, node.lineNo(), node.parent.name, node.name, attr.name))
+                    attr_msg.add_source('%s:%i' % (self._doc.name, node.lineNo()))
+                    attr_msg.add_marker('%s/%s@%s' % (node.parent.name, node.name, attr.name))
                     attr_msg.add_text(attr.content)
                     if comments:
-                        attr_msg.add_comment(self.get_its_loc_note(attr))
+                        for locnote in self.get_its_loc_notes(attr):
+                            comment = Comment(locnote)
+                            comment.add_marker ('%s/%s@%s' % (
+                                    node.parent.name, node.name, attr.name))
+                            attr_msg.add_comment(comment)
                     self._msgs.add_message(attr_msg, attr)
 
-
         if comments and msg is not None:
-            msg.add_comment(self.get_its_loc_note(node))
+            cnode = node
+            while cnode is not None:
+                hasnote = False
+                for locnote in self.get_its_loc_notes(cnode):
+                    comment = Comment(locnote)
+                    if withinText:
+                        comment.add_marker('.%s/%s' % (path, cnode.name))
+                    msg.add_comment(comment)
+                    hasnote = True
+                if hasnote or not is_unit:
+                    break
+                cnode = cnode.parent
 
         in_translatable = self._in_translatable
         self._in_translatable = (translate == 'yes')
+        if withinText:
+            path = path + '/' + node.name
         for child in xml_child_iter(node):
-            self.generate_message(child, msg, comments=comments)
+            self.generate_message(child, msg, comments=comments, path=path)
         self._in_translatable = in_translatable
 
         if translate:
@@ -864,8 +1015,8 @@ class Document (object):
         if node.hasNsProp('translate', NS_ITS):
             return node.nsProp('translate', NS_ITS)
         if xml_is_ns_name(node, NS_ITS, 'span'):
-            if node.hasProp('translate'):
-                return node.prop('translate')
+            if node.hasNsProp('translate', None):
+                return node.nsProp('translate', None)
         if self._its_translate_nodes.has_key(node):
             return self._its_translate_nodes[node]
         return None
@@ -873,17 +1024,20 @@ class Document (object):
     def get_its_within_text (self, node):
         return self._its_within_text_nodes.get(node, 'no')
 
-    def get_its_loc_note (self, node):
+    def get_its_loc_notes (self, node):
+        ret = []
         if node.hasNsProp('locNote', NS_ITS):
-            return re.sub('\s+', ' ', node.nsProp('locNote', NS_ITS)).strip()
+            ret.append(re.sub('\s+', ' ', node.nsProp('locNote', NS_ITS)).strip())
         if node.hasNsProp('locNoteRef', NS_ITS):
-            return 'SEE: ' + re.sub('\s+', ' ', node.nsProp('locNoteRef', NS_ITS)).strip()
+            ret.append('(itstool) link: ' + re.sub('\s+', ' ', node.nsProp('locNoteRef', NS_ITS)).strip())
         if xml_is_ns_name(node, NS_ITS, 'span'):
-            if node.hasProp('locNote'):
-                return re.sub('\s+', ' ', node.prop('locNote')).strip()
-            if node.hasProp('locNoteRef'):
-                return 'SEE: ' + re.sub('\s+', ' ', node.prop('locNoteRef')).strip()
-        return self._its_loc_notes.get(node, None)
+            if node.hasNsProp('locNote', None):
+                ret.append(re.sub('\s+', ' ', node.nsProp('locNote', None)).strip())
+            if node.hasNsProp('locNoteRef', None):
+                ret.append('(itstool) link: ' + re.sub('\s+', ' ', node.nsProp('locNoteRef', None)).strip())
+        for locnote in self._its_loc_notes.get(node, []):
+            ret.append(locnote)
+        return ret
 
     @staticmethod
     def _try_xpath_eval (xpath, expr):
@@ -934,6 +1088,10 @@ if __name__ == '__main__':
                        default=None,
                        metavar='LANGUAGE',
                        help='explicitly set the language code for output file')
+    options.add_option('-j', '--join',
+                       dest='join',
+                       metavar='FILE',
+                       help='join multiple MO files with the XML file FILE and output XML file')
     options.add_option('-m', '--merge',
                        dest='merge',
                        metavar='FILE',
@@ -959,7 +1117,7 @@ if __name__ == '__main__':
         print('itstool %s' % VERSION)
         sys.exit(0)
 
-    if opts.merge is None:
+    if opts.merge is None and opts.join is None:
         messages = MessageList()
         for filename in args[1:]:
             doc = Document(filename, messages)
@@ -977,7 +1135,7 @@ if __name__ == '__main__':
                 sys.stderr.write('Error: Cannot write to file %s\n' % opts.output)
                 sys.exit(1)
         messages.output(out)
-    else:
+    elif opts.merge is not None:
         try:
             translations = gettext.GNUTranslations(open(opts.merge, 'rb'))
         except:
@@ -1002,6 +1160,41 @@ if __name__ == '__main__':
             messages = MessageList()
             doc = Document(filename, messages)
             doc.apply_its_rules()
+            if opts.itsfile is not None:
+                for itsfile in opts.itsfile:
+                    doc.apply_its_file(itsfile)
+            try:
+                doc.merge_translations(translations, opts.lang, strict=opts.strict)
+            except Exception as e:
+                sys.stderr.write('Error: Could not merge translations:\n%s\n' % str(e))
+                sys.exit(1)
+            fout = out
+            if isinstance(fout, basestring):
+                fout = file(os.path.join(fout, os.path.basename(filename)), 'w')
+            fout.write(doc._doc.serialize('utf-8'))
+    elif opts.join is not None:
+        translations = {}
+        for filename in args[1:]:
+            try:
+                thistr = gettext.GNUTranslations(open(filename, 'rb'))
+            except:
+                sys.stderr.write('Error: cannot open mo file %s\n' % filename)
+                sys.exit(1)
+            thistr.add_fallback(NoneTranslations())
+            lang = convert_locale(os.path.splitext(os.path.basename(filename))[0])
+            translations[lang] = thistr
+        if opts.output is None:
+            out = sys.stdout
+        elif os.path.isdir(opts.output):
+            out = file(os.path.join(opts.output, os.path.basename(filename)), 'w')
+        else:
+            out = file(opts.output, 'w')
+        messages = MessageList()
+        doc = Document(opts.join, messages)
+        doc.apply_its_rules()
+        doc.join_translations(translations, strict=opts.strict)
+        out.write(doc._doc.serialize('utf-8'))
+        if False:
             if opts.itsfile is not None:
                 for itsfile in opts.itsfile:
                     doc.apply_its_file(itsfile)
