@@ -1,3 +1,69 @@
+commit 0520144626db679e81725aebfaba273a52fd0bf4
+Merge: 092a264 7e07396
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat Sep 3 13:21:09 2011 -0400
+
+    Merge: Proper XML error catching [claude]
+
+commit 092a26470a5032c85ba8a40570ee6fd6c9fe9b30
+Merge: c3566db 48e4257
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat Sep 3 13:10:19 2011 -0400
+
+    Merge commit '48e4257421beb439f23a78507f43aae694775974'
+
+commit c3566dbec79ecd2d0bbef5b42044d7b12380c034
+Merge: 6e6ca0d 6411b09
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Sat Sep 3 10:56:58 2011 -0400
+
+    Merge commit 'refs/merge-requests/2' of git://gitorious.org/itstool/itstool
+
+commit 7e0739641507d92e1d2ec7e9b7f5e5c7c09a940a
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Wed Aug 17 13:32:42 2011 +0200
+
+    Catch XML errors in translated content
+
+ itstool.in                   |    1 +
+ tests/Translate3.ll.wrong.po |   19 +++++++++++++++++++
+ tests/run_tests.py           |   24 ++++++++++++++++++------
+ 3 files changed, 38 insertions(+), 6 deletions(-)
+
+commit 1abdf1b0d83b37a9f298563e139c118c9a62629b
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Wed Aug 17 12:10:36 2011 +0200
+
+    Catch XML parsing errors so itstool does properly exit with error code
+
+ itstool.in          |   10 ++++++++++
+ tests/Malformed.xml |    6 ++++++
+ tests/run_tests.py  |   18 ++++++++++++------
+ 3 files changed, 28 insertions(+), 6 deletions(-)
+
+commit 6411b09431eb72ed5426d40a0142e7479c486d3b
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Wed Jun 29 21:15:46 2011 +0200
+
+    Fix placeholder translation when it contains sub-elements
+
+ itstool.in               |   12 ++++++++++--
+ tests/Placeholder.ll.po  |   19 +++++++++++++++++++
+ tests/Placeholder.ll.xml |    6 ++++++
+ tests/Placeholder.xml    |    5 +++++
+ tests/run_tests.py       |    4 +++-
+ 5 files changed, 43 insertions(+), 3 deletions(-)
+
+commit 6e6ca0daf4084aaa94268f062461e1ec712698fa
+Author: Shaun McCance <shaunm@gnome.org>
+Date:   Mon Jun 27 14:59:56 2011 -0400
+
+    Version 1.1.0
+
+ NEWS         |   14 ++++++++++++++
+ configure.ac |    2 +-
+ 2 files changed, 15 insertions(+), 1 deletions(-)
+
 commit 187fcbe585560f128c7436e66f6b8e3a789a73b0
 Author: Shaun McCance <shaunm@gnome.org>
 Date:   Sun Jun 26 12:28:10 2011 -0400
@@ -352,6 +418,17 @@ Date:   Tue Apr 26 16:22:24 2011 -0400
 
  itstool |   12 ++++++++++++
  1 files changed, 12 insertions(+), 0 deletions(-)
+
+commit 48e4257421beb439f23a78507f43aae694775974
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Tue Apr 26 17:00:23 2011 +0100
+
+    autogen.sh: Improve script to handle out of tree compilations
+    
+    Also handle the option to not run the configure step
+
+ autogen.sh |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
 
 commit 65ecbc8856e91b991d812e08dfa10300504bfb1b
 Author: Shaun McCance <shaunm@gnome.org>
