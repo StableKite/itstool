@@ -169,6 +169,8 @@ class Message (object):
                     if prop.ns() is not None:
                         name = prop.ns().name + ':' + name
                     atval = prop.content
+                    if not isinstance(atval, unicode):
+                        atval = unicode(atval, 'utf-8')
                     atval = atval.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
                     self._message += " %s=\"%s\"" % (name, atval)
         if node.children is not None:
@@ -295,7 +297,11 @@ class Document (object):
     def __init__ (self, filename, messages):
         self._xml_err = ''
         libxml2.registerErrorHandler(xml_error_catcher, self)
-        ctxt = libxml2.createFileParserCtxt(filename)
+        try:
+            ctxt = libxml2.createFileParserCtxt(filename)
+        except:
+            sys.stderr.write('Error: cannot open XML file %s\n' % filename)
+            sys.exit(1)
         ctxt.lineNumbers(1)
         ctxt.replaceEntities(1)
         ctxt.parseDocument()
@@ -707,7 +713,8 @@ class Document (object):
             if strict:
                 raise
             else:
-                sys.stderr.write('Warning: Could not merge translation for msgid:\n%s\n' % msgstr)
+                sys.stderr.write('Warning: Could not merge translation for msgid:\n%s\n' %
+                                 msgstr.encode('utf-8'))
                 self._xml_err = ''
                 return node
         def scan_node(node):
@@ -734,6 +741,15 @@ class Document (object):
         if self._itst_credits is not None:
             self._msgs.add_credits()
         for ext in self._itst_externals:
+            translate = None
+            node = ext[0]
+            while node != None:
+                translate = self.get_its_translate(node)
+                if translate is not None:
+                    break
+                node = node.parent
+            if translate == 'no':
+                continue
             msg = Message()
             try:
                 fullfile = os.path.join(os.path.dirname(self._filename), ext[1])
