@@ -7,6 +7,8 @@ itstool (2.0.4-1) UNRELEASED; urgency=medium
   * New upstream release.
   * debian/patches/fix-utf8-handling.patch: remove no longer needed backported
     fix.
+  * debian/compat: use recommended debhelper compatibility level 11.
+  * debian/control: depend on debhelper >= 11.
 
  -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 05 Oct 2018 13:06:48 +0200
 
