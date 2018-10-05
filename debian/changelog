@@ -4,7 +4,7 @@ itstool (2.0.4-1) UNRELEASED; urgency=medium
   * d/copyright: Use https protocol in Format field
 
   [ Tanguy Ortolo ]
-  * New upstream release.
+  * New upstream release. (Closes: #890863)
   * debian/patches/fix-utf8-handling.patch: remove no longer needed backported
     fix.
   * debian/compat: use recommended debhelper compatibility level 11.
