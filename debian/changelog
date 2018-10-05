@@ -5,6 +5,8 @@ itstool (2.0.4-1) UNRELEASED; urgency=medium
 
   [ Tanguy Ortolo ]
   * New upstream release.
+  * debian/patches/fix-utf8-handling.patch: remove no longer needed backported
+    fix.
 
  -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 05 Oct 2018 13:06:48 +0200
 
