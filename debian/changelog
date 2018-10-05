@@ -12,6 +12,7 @@ itstool (2.0.4-1) UNRELEASED; urgency=medium
      - depend on debhelper >= 11.
      - update Standards-Version to 4.2.1 (implied switching debian/copyright
        format field to https, see above).
+  * debian/upstream/metadata: add upstream metadata file.
 
  -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 05 Oct 2018 13:06:48 +0200
 
