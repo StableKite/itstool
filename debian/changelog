@@ -1,8 +1,12 @@
-itstool (2.0.2-4) UNRELEASED; urgency=medium
+itstool (2.0.4-1) UNRELEASED; urgency=medium
 
+  [ Ondřej Nový ]
   * d/copyright: Use https protocol in Format field
 
- -- Ondřej Nový <onovy@debian.org>  Tue, 27 Feb 2018 21:13:16 +0100
+  [ Tanguy Ortolo ]
+  * New upstream release.
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 05 Oct 2018 13:06:48 +0200
 
 itstool (2.0.2-3.1) unstable; urgency=medium
 
