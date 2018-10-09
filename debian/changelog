@@ -1,4 +1,4 @@
-itstool (2.0.4-2) UNRELEASED; urgency=medium
+itstool (2.0.4-2) unstable; urgency=medium
 
   * debian/patches/fix_crash_910458.patch: backport upstream fix for crashes.
     (Closes: #910458)
