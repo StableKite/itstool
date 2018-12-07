@@ -18,7 +18,7 @@ Index: itstool/itstool.in
 ===================================================================
 --- itstool.orig/itstool.in
 +++ itstool/itstool.in
-@@ -1059,7 +1059,7 @@ class Document (object):
+@@ -1062,7 +1062,7 @@ class Document (object):
              else:
                  sys.stderr.write('Warning: Could not merge %stranslation for msgid:\n%s\n' % (
                          (lang + ' ') if lang is not None else '',
@@ -27,7 +27,7 @@ Index: itstool/itstool.in
                  self._xml_err = ''
                  return node
          def scan_node(node):
-@@ -1086,7 +1086,7 @@ class Document (object):
+@@ -1089,7 +1089,7 @@ class Document (object):
              else:
                  sys.stderr.write('Warning: Could not merge %stranslation for msgid:\n%s\n' % (
                      (lang + ' ') if lang is not None else '',
