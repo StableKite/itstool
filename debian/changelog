@@ -5,7 +5,9 @@ itstool (2.0.5-1) UNRELEASED; urgency=medium
      - fix_crash_912099.patch: fix a crash with some problematic.
        documentation. (Closes: #912099)
      - fix_crash_910458.patch: remove, applied upstream.
-  * debian/gbp.conf: use pristine-tar. (Thanks: Jeremy Bicha)
+  * debian/gbp.conf:
+     - use pristine-tar. (Thanks: Jeremy Bicha)
+     - use upstream tags.
 
  -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 07 Dec 2018 14:12:10 +0100
 
