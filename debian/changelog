@@ -1,10 +1,13 @@
-itstool (2.0.4-3) UNRELEASED; urgency=medium
+itstool (2.0.5-1) UNRELEASED; urgency=medium
 
-  * debian/patches/fix_crash_912099.patch: fix a crash with some problematic
-    documentation. (Closes: #912099)
+  * New upstream release.
+  * debian/patches:
+     - fix_crash_912099.patch: fix a crash with some problematic.
+       documentation. (Closes: #912099)
+     - fix_crash_910458.patch: remove, applied upstream.
   * debian/gbp.conf: use pristine-tar. (Thanks: Jeremy Bicha)
 
- -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 07 Dec 2018 13:51:08 +0100
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 07 Dec 2018 14:12:10 +0100
 
 itstool (2.0.4-2) unstable; urgency=medium
 
