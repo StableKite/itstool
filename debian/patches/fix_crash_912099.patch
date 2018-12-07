@@ -1,0 +1,38 @@
+Description: Fix the crash from #912099
+ ITS Tool 2.0.4 crashes when building some documentation, as reported in
+ #912099. This comes from translations with invalid XML markup, which ITS Tool
+ fails to merge (which is not abnormal), and to report these issues, needlessly
+ encodes the original msgstr from unicode to bytes, causing it to be recoded
+ using the default ascii codec, which fails when the msgstr contains anything
+ out of ascii.
+ .
+ This patch removes the useless decoding, avoiding the failing subsequent
+ recoding.
+Bug: https://github.com/itstool/itstool/issues/22
+Bug-Debian: https://bugs.debian.org/912099
+Forwarded: no
+Author: Tanguy Ortolo <tanguy+debian@ortolo.eu>
+Last-Update: 2018-12-071
+
+Index: itstool/itstool.in
+===================================================================
+--- itstool.orig/itstool.in
++++ itstool/itstool.in
+@@ -1059,7 +1059,7 @@ class Document (object):
+             else:
+                 sys.stderr.write('Warning: Could not merge %stranslation for msgid:\n%s\n' % (
+                         (lang + ' ') if lang is not None else '',
+-                        msgstr.encode('utf-8')))
++                        msgstr))
+                 self._xml_err = ''
+                 return node
+         def scan_node(node):
+@@ -1086,7 +1086,7 @@ class Document (object):
+             else:
+                 sys.stderr.write('Warning: Could not merge %stranslation for msgid:\n%s\n' % (
+                     (lang + ' ') if lang is not None else '',
+-                    msgstr.encode('utf-8')))
++                    msgstr))
+                 self._xml_err = ''
+                 ctxt.doc().freeDoc()
+                 return node

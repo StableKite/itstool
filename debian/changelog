@@ -1,3 +1,10 @@
+itstool (2.0.4-3) UNRELEASED; urgency=medium
+
+  * debian/patches/fix_crash_912099.patch: fix a crash with some problematic
+    documentation. (Closes: #912099)
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Fri, 07 Dec 2018 13:51:08 +0100
+
 itstool (2.0.4-2) unstable; urgency=medium
 
   * debian/patches/fix_crash_910458.patch: backport upstream fix for crashes.
