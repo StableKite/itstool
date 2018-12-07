@@ -8,9 +8,9 @@ Description: Fix the crash from #912099
  .
  This patch removes the useless decoding, avoiding the failing subsequent
  recoding.
-Bug: https://github.com/itstool/itstool/issues/22
+Bug: https://github.com/itstool/itstool/issues/25
 Bug-Debian: https://bugs.debian.org/912099
-Forwarded: no
+Forwarded: https://github.com/itstool/itstool/issues/25
 Author: Tanguy Ortolo <tanguy+debian@ortolo.eu>
 Last-Update: 2018-12-071
 
