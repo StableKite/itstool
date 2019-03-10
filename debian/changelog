@@ -1,3 +1,10 @@
+itstool (2.0.5-3) UNRELEASED; urgency=medium
+
+  * debian/patches/fix_crash_918953.patch: fix an encoding crash.
+    (Closes: #918953)
+
+ -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 17 Jan 2019 14:11:26 -0800
+
 itstool (2.0.5-2) unstable; urgency=medium
 
   * debian/patches/fix_crash_912099.patch: fix a further similar crash.
