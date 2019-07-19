@@ -1,7 +1,11 @@
 itstool (2.0.5-3) UNRELEASED; urgency=medium
 
+  [ Tanguy Ortolo ]
   * debian/patches/fix_crash_918953.patch: fix an encoding crash.
     (Closes: #918953)
+
+  [ Ondřej Nový ]
+  * Use debhelper-compat instead of debian/compat.
 
  -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 17 Jan 2019 14:11:26 -0800
 
