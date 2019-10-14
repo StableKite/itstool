@@ -6,6 +6,10 @@ itstool (2.0.6-1) unstable; urgency=medium
   * debian/control:
     + Bump debhelper compat to v12.
     + Bump Standards-Version to 4.4.1.
+    + Switch to use python3.
+  * debian/rules:
+    + Force using autoconf as buildsystem.
+    + Use "dh_missing --fail-missing".
 
   [ Tanguy Ortolo ]
   * debian/patches/fix_crash_918953.patch: fix an encoding crash.
@@ -14,7 +18,7 @@ itstool (2.0.6-1) unstable; urgency=medium
   [ Ondřej Nový ]
   * Use debhelper-compat instead of debian/compat.
 
- -- Boyuan Yang <byang@debian.org>  Mon, 14 Oct 2019 14:43:32 -0400
+ -- Boyuan Yang <byang@debian.org>  Mon, 14 Oct 2019 14:46:57 -0400
 
 itstool (2.0.5-2) unstable; urgency=medium
 
