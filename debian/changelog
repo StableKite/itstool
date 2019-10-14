@@ -1,4 +1,11 @@
-itstool (2.0.5-3) UNRELEASED; urgency=medium
+itstool (2.0.6-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Boyuan Yang ]
+  * debian/control:
+    + Bump debhelper compat to v12.
+    + Bump Standards-Version to 4.4.1.
 
   [ Tanguy Ortolo ]
   * debian/patches/fix_crash_918953.patch: fix an encoding crash.
@@ -7,7 +14,7 @@ itstool (2.0.5-3) UNRELEASED; urgency=medium
   [ Ondřej Nový ]
   * Use debhelper-compat instead of debian/compat.
 
- -- Tanguy Ortolo <tanguy+debian@ortolo.eu>  Thu, 17 Jan 2019 14:11:26 -0800
+ -- Boyuan Yang <byang@debian.org>  Mon, 14 Oct 2019 14:43:32 -0400
 
 itstool (2.0.5-2) unstable; urgency=medium
 
