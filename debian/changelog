@@ -1,4 +1,4 @@
-itstool (2.0.5-3) unstable; urgency=medium
+itstool (2.0.6-1) unstable; urgency=medium
 
   * Team upload.
 
@@ -18,7 +18,7 @@ itstool (2.0.5-3) unstable; urgency=medium
   [ Ondřej Nový ]
   * Use debhelper-compat instead of debian/compat.
 
- -- Boyuan Yang <byang@debian.org>  Mon, 14 Oct 2019 14:46:57 -0400
+ -- Boyuan Yang <byang@debian.org>  Tue, 15 Oct 2019 15:06:48 -0400
 
 itstool (2.0.5-2) unstable; urgency=medium
 
