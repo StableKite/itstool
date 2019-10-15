@@ -1,3 +1,43 @@
+commit ce3e235efbe251083f257e0b1cfdaa11e4f7b01c
+Author: Shaun McCance <shaunm@redhat.com>
+Date:   Sun Dec 30 16:31:05 2018 -0500
+
+    Make DocBook keyword element within text
+
+ its/docbook.its  | 1 +
+ its/docbook5.its | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit bc5724ed98eb591d4b82dff1b4b47ed77ec47eda
+Author: Shaun McCance <shaunm@redhat.com>
+Date:   Thu Nov 8 19:01:43 2018 -0500
+
+    Apply ITS files passed with -i in --join mode
+    
+    Fixes https://github.com/itstool/itstool/issues/34
+
+ itstool.in | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 39000db89b4d376af34fd4499743ac0fa5d7cd90
+Author: Shaun McCance <shaunm@redhat.com>
+Date:   Sun Oct 28 17:08:04 2018 -0400
+
+    Version 2.0.5
+
+ NEWS         | 7 +++++++
+ configure.ac | 2 +-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+commit 84891bdca128192d1e8af9a3b86ac6fb9a8a09ed
+Author: Shaun McCance <shaunm@redhat.com>
+Date:   Sun Oct 28 16:59:14 2018 -0400
+
+    Auto update to INSTALL file
+
+ INSTALL | 320 ++++++++++++++++++++++++++++++++--------------------------------
+ 1 file changed, 159 insertions(+), 161 deletions(-)
+
 commit 2eb0a6cd3b15b0bca5abf19ba0fcff45bd457523
 Author: Shaun McCance <shaunm@redhat.com>
 Date:   Tue Aug 21 11:28:54 2018 -0400

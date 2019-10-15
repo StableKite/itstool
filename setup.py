@@ -8,7 +8,7 @@
 from distutils.core import setup
 
 setup(name='itstool',
-      version='2.0.5',
+      version='2.0.6',
       description='XML to PO and back again using W3C ITS rules',
       author='Shaun McCance',
       author_email='shaunm@gnome.org',
