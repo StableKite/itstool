@@ -1,4 +1,4 @@
-Format:  https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: ITS Tool
 Upstream-Contact: Shaun McCance <shaunm@gnome.org>
 Source: <http://itstool.org/download/>
