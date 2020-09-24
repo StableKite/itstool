@@ -6,8 +6,8 @@ Uploaders: Tanguy Ortolo <tanguy+debian@ortolo.eu>
 Build-Depends: debhelper-compat (= 12), python3:any, python3-libxml2
 Standards-Version: 4.4.1
 Homepage: http://itstool.org/
-Vcs-Git: https://salsa.debian.org/python-team/applications/itstool.git
-Vcs-Browser: https://salsa.debian.org/python-team/applications/itstool
+Vcs-Git: https://salsa.debian.org/python-team/packages/itstool.git
+Vcs-Browser: https://salsa.debian.org/python-team/packages/itstool
 
 Package: itstool
 Architecture: all
