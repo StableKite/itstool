@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Python Team <team+python@tracker.debian.org>
 Uploaders: Tanguy Ortolo <tanguy+debian@ortolo.eu>
 Build-Depends: debhelper-compat (= 12), python3:any, python3-libxml2
-Standards-Version: 4.4.1
+Standards-Version: 4.5.0
 Homepage: http://itstool.org/
 Vcs-Git: https://salsa.debian.org/python-team/packages/itstool.git
 Vcs-Browser: https://salsa.debian.org/python-team/packages/itstool
