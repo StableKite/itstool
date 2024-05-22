@@ -1,3 +1,11 @@
+itstool (2.0.6-3) unstable; urgency=medium
+
+  * Team upload
+  * d/p/fix_warnings_1076134.patch: fix py3.12 SyntaxWarnings
+    (Closes: #1076134, LP: #2061229)
+
+ -- Simon Chopin <schopin@ubuntu.com>  Wed, 22 May 2024 17:33:55 +0200
+
 itstool (2.0.6-2) unstable; urgency=medium
 
   [ Debian Janitor ]
