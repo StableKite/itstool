@@ -3,7 +3,8 @@ Section: text
 Priority: optional
 Maintainer: Debian Python Team <team+python@tracker.debian.org>
 Uploaders: Tanguy Ortolo <tanguy+debian@ortolo.eu>
-Build-Depends: debhelper-compat (= 12), python3:any, python3-libxml2
+Build-Depends: debhelper-compat (= 12), docbook-xml <!nocheck>,
+ gettext <!nocheck>, python3:any, python3-lxml
 Standards-Version: 4.5.0
 Homepage: http://itstool.org/
 Vcs-Git: https://salsa.debian.org/python-team/packages/itstool.git
@@ -12,7 +13,7 @@ Vcs-Browser: https://salsa.debian.org/python-team/packages/itstool
 Package: itstool
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, python3, python3-libxml2
+Depends: ${misc:Depends}, python3, python3-lxml
 Description: tool for translating XML documents with PO files
  ITS Tool allows you to translate your XML documents with PO files, using rules
  from the W3C Internationalization Tag Set (ITS) to determine what to translate
