@@ -2,6 +2,7 @@ itstool (2.0.6-4build1) stonking; urgency=medium
 
   * Package the upstream lxml port for Python free threading (itstool#57).
   * Run the upstream XML extraction and translation suite at package build time.
+  * Keep the installed shebang on the canonical system Python executable.
 
  -- Robolightning <irobolightning@gmail.com>  Wed, 18 Nov 2026 21:01:18 +0000
 
